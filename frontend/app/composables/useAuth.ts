@@ -16,7 +16,7 @@ export function useAuth() {
       ? `${TOKEN_COOKIE}=${encodeURIComponent(value)}; Path=/; Max-Age=${TOKEN_TTL_SECONDS}; SameSite=Strict${secure}`
       : `${TOKEN_COOKIE}=; Path=/; Max-Age=0; SameSite=Strict${secure}`
   }
-  const me = useState<Me | null>('rc_me', () => null)
+  const me = useState<Me | null>('ra_me', () => null)
 
   const isAuthenticated = computed(() => !!token.value)
   const isAdmin = computed(() => me.value?.roles.includes('ROLE_ADMIN') ?? false)
@@ -47,10 +47,10 @@ export function useAuth() {
     return me.value
   }
 
-  async function logout() {
+  async function logout(redirect = true) {
     setToken(null)
     me.value = null
-    await navigateTo('/login')
+    if (redirect) await navigateTo('/login')
   }
 
   return { token: readonly(token), me, isAuthenticated, isAdmin, authorizationHeader, login, startSession, fetchMe, logout }

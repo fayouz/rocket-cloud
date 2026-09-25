@@ -15,6 +15,13 @@ parameters:
     env(SECRETS_ENCRYPTION_KEY): ''
     # Directory of the data written by the application (checked on the dashboard).
     env(DATA_DIR): '%kernel.project_dir%/var/data'
+    env(FRONTEND_URL): 'http://localhost:3200'
+    # Storage: quota per user and maximum size of a file (bytes).
+    env(CLOUD_DEFAULT_QUOTA): '10737418240'
+    env(CLOUD_MAX_FILE_SIZE): '536870912'
+    # Rocket Mailer (share notifications): URL of its API and application token (rma_…). Empty: no email.
+    env(ROCKET_MAILER_URL): ''
+    env(ROCKET_MAILER_TOKEN): ''
     # Update check (GitHub releases of this repository; empty: disabled) and one-click update (Watchtower HTTP API).
     env(APP_VERSION): ''
     env(UPDATE_REPOSITORY): 'fayouz/rocket-cloud'

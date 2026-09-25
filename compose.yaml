@@ -13,6 +13,13 @@ x-api-env: &api-env
   SETUP_TOKEN: ${SETUP_TOKEN:-}
   # Encrypts the secrets stored in the database (empty: derived from APP_SECRET).
   SECRETS_ENCRYPTION_KEY: ${SECRETS_ENCRYPTION_KEY:-}
+  # Links of the share notifications, storage limits (bytes).
+  FRONTEND_URL: ${FRONTEND_URL:-http://localhost:3200}
+  CLOUD_DEFAULT_QUOTA: ${CLOUD_DEFAULT_QUOTA:-10737418240}
+  CLOUD_MAX_FILE_SIZE: ${CLOUD_MAX_FILE_SIZE:-536870912}
+  # Rocket Mailer (share notifications): its API and the token of the application declared there. Empty: no email.
+  ROCKET_MAILER_URL: ${ROCKET_MAILER_URL:-}
+  ROCKET_MAILER_TOKEN: ${ROCKET_MAILER_TOKEN:-}
   CORS_ALLOW_ORIGIN: ${CORS_ALLOW_ORIGIN:-^https?://(localhost|127\.0\.0\.1)(:[0-9]+)?$$}
   LDAP_ENABLED: ${LDAP_ENABLED:-0}
   LDAP_URL: ${LDAP_URL:-ldap://ldap:389}

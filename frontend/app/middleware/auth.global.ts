@@ -4,6 +4,8 @@ export default defineNuxtRouteMiddleware(async (to) => {
 
   // End of a single sign-on: the page completes it itself.
   if (to.path === '/auth/callback') return
+  // Share links are opened by anyone who has the link.
+  if (to.path.startsWith('/s/')) return
 
   const auth = useAuth()
 
