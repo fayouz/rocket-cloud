@@ -2,7 +2,9 @@
 
 namespace App\Dashboard;
 
-use App\Entity\User;
+use Rocket\Core\Dashboard\DashboardStats;
+use Rocket\Core\Dashboard\DashboardSectionInterface;
+use Rocket\Core\Entity\User;
 use App\Files\FileUploader;
 use Doctrine\DBAL\Connection;
 

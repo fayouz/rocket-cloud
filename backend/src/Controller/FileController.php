@@ -8,7 +8,7 @@ use App\Files\FileStorage;
 use App\Files\FileUploader;
 use App\Repository\FolderRepository;
 use App\Repository\StoredFileRepository;
-use App\Security\ActorContext;
+use Rocket\Core\Security\ActorContext;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\File\UploadedFile;

@@ -4,7 +4,7 @@ namespace App\Files;
 
 use App\Entity\Folder;
 use App\Entity\StoredFile;
-use App\Entity\User;
+use Rocket\Core\Entity\User;
 use App\Repository\StoredFileRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;

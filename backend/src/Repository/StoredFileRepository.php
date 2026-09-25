@@ -15,7 +15,7 @@ class StoredFileRepository extends ServiceEntityRepository
     }
 
     /** Bytes used by a user. */
-    public function usage(\App\Entity\User $owner): int
+    public function usage(\Rocket\Core\Entity\User $owner): int
     {
         return (int) $this->createQueryBuilder('f')->select('COALESCE(SUM(f.size), 0)')->where('f.owner = :owner')
             ->setParameter('owner', $owner->getId(), 'uuid')->getQuery()->getSingleScalarResult();

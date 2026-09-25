@@ -2,7 +2,7 @@
 
 namespace App\Tests\Functional;
 
-use App\Entity\User;
+use Rocket\Core\Entity\User;
 use App\Tests\ApiTestTrait;
 use App\Tests\Support\HttpMock;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;

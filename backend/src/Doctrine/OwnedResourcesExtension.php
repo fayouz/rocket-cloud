@@ -8,7 +8,7 @@ use ApiPlatform\Metadata\Operation;
 use App\Entity\Folder;
 use App\Entity\ShareLink;
 use App\Entity\StoredFile;
-use App\Security\ActorContext;
+use Rocket\Core\Security\ActorContext;
 use Doctrine\ORM\QueryBuilder;
 
 /** A space is private: everyone, administrators included, only lists their own folders, files and share links. */

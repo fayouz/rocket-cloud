@@ -20,6 +20,13 @@ x-api-env: &api-env
   # Rocket Mailer (share notifications): its API and the token of the application declared there. Empty: no email.
   ROCKET_MAILER_URL: ${ROCKET_MAILER_URL:-}
   ROCKET_MAILER_TOKEN: ${ROCKET_MAILER_TOKEN:-}
+  # Suite mode: sign-in through Rocket Auth (see rocket-core). Empty ROCKET_AUTH_URL: standalone.
+  ROCKET_AUTH_URL: ${ROCKET_AUTH_URL:-}
+  ROCKET_AUTH_INTERNAL_URL: ${ROCKET_AUTH_INTERNAL_URL:-}
+  ROCKET_AUTH_CLIENT_ID: ${ROCKET_AUTH_CLIENT_ID:-rocket-cloud}
+  ROCKET_AUTH_CLIENT_SECRET: ${ROCKET_AUTH_CLIENT_SECRET:-}
+  ROCKET_AUTH_ADMIN_GROUP: ${ROCKET_AUTH_ADMIN_GROUP:-rocket-admins}
+  ROCKET_LOCAL_LOGIN: ${ROCKET_LOCAL_LOGIN:-0}
   CORS_ALLOW_ORIGIN: ${CORS_ALLOW_ORIGIN:-^https?://(localhost|127\.0\.0\.1)(:[0-9]+)?$$}
   LDAP_ENABLED: ${LDAP_ENABLED:-0}
   LDAP_URL: ${LDAP_URL:-ldap://ldap:389}

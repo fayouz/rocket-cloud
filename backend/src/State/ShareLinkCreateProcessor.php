@@ -7,7 +7,7 @@ use ApiPlatform\State\ProcessorInterface;
 use App\Entity\ShareLink;
 use ApiPlatform\Validator\Exception\ValidationException;
 use App\Message\ShareNotification;
-use App\Security\ActorContext;
+use Rocket\Core\Security\ActorContext;
 use App\Share\MailerClient;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Messenger\MessageBusInterface;

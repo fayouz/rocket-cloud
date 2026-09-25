@@ -2,6 +2,7 @@
 
 namespace App\Command;
 
+use Rocket\Core\Command\DemoSeederInterface;
 use App\Entity\Folder;
 use App\Entity\ShareLink;
 use App\Entity\StoredFile;

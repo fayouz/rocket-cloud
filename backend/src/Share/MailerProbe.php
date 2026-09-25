@@ -2,7 +2,7 @@
 
 namespace App\Share;
 
-use App\Health\ServiceProbeInterface;
+use Rocket\Core\Health\ServiceProbeInterface;
 
 /** Rocket Mailer on the dashboard (share notifications). */
 final class MailerProbe implements ServiceProbeInterface

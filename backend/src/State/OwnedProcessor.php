@@ -6,7 +6,7 @@ use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
 use App\Entity\Folder;
 use ApiPlatform\Validator\Exception\ValidationException;
-use App\Security\ActorContext;
+use Rocket\Core\Security\ActorContext;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 

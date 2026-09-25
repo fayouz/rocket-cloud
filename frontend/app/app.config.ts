@@ -10,8 +10,9 @@ export default defineAppConfig({
     },
   },
   rocket: {
+    id: 'cloud',
     name: 'Rocket Cloud',
-    icon: 'i-lucide-rocket',
+    icon: 'i-lucide-cloud',
     // Login page subtitle.
     tagline: 'Vos fichiers, rangés, partagés et disponibles pour vos applications.',
     // Main menu: the domain pages ("label" entries start a group).
@@ -20,6 +21,8 @@ export default defineAppConfig({
       { label: 'Mes fichiers', icon: 'i-lucide-folder', to: '/files' },
       { label: 'Mes partages', icon: 'i-lucide-share-2', to: '/shares' },
     ] as { label: string, icon?: string, to?: string, type?: 'label', exact?: boolean, admin?: boolean }[],
+    // Share links are opened by anyone who has the link.
+    publicPaths: ['/s/'],
     // Extra entries of the Administration menu.
     adminNavigation: [] as { label: string, icon: string, to: string }[],
     // "Services & raccourcis" of the dashboard, besides the documentation, changelog and API.
