@@ -1,6 +1,6 @@
 ---
 title: Rocket Cloud
-description: Envoyez des emails riches depuis Rocket Cloud ou directement depuis vos propres applications, grâce au composeur embarquable.
+description: Rangez vos fichiers, partagez-les par lien public et rendez-les disponibles pour vos applications.
 seo:
   title: Rocket Cloud — Documentation
 ---
@@ -8,19 +8,19 @@ seo:
 ::u-page-hero
 ---
 orientation: horizontal
-title: Des emails riches, partout dans vos applications.
+title: Vos fichiers, rangés, partagés et disponibles pour vos applications.
 ---
 #description
-Rocket Cloud centralise l'envoi d'emails : composeur en texte enrichi, templates visuels versionnés, comptes LDAP, et un **composeur embarquable** que vos applications intègrent en quelques lignes, en toute sécurité.
+Rocket Cloud donne à chaque utilisateur un **espace privé** : dossiers, dépôt par glisser-déposer, aperçu, recherche. Un fichier ou un dossier se partage par un **lien public**, protégé par mot de passe, limité dans le temps ou en téléchargements, et envoyé par email via **Rocket Mailer**.
 
 #links
   :::u-button
   ---
-  to: /embed/overview
+  to: /api/files
   size: xl
   trailing-icon: i-lucide-arrow-right
   ---
-  Intégrer le composeur
+  Déposer depuis une application
   :::
 
   :::u-button
@@ -35,18 +35,13 @@ Rocket Cloud centralise l'envoi d'emails : composeur en texte enrichi, templates
   :::
 
 #default
-  ```html [votre-page.html]
-  <script src="https://mailer.exemple.com/embed.js"></script>
-  <div id="mailer"></div>
-  <script>
-    RocketMailer.mount('#mailer', {
-      baseUrl: 'https://mailer.exemple.com',
-      applicationId: '0199…',
-      getToken: () => fetch('/rocket-cloud/token')
-        .then(r => r.json()).then(d => d.token),
-      onSent: email => console.log('Envoyé', email),
-    })
-  </script>
+  ```bash [Terminal]
+  curl -X POST https://cloud.exemple.com/api/files \
+    -H "Authorization: Bearer rca_…" \
+    -H "X-Impersonate-User: alice@exemple.com" \
+    -F file=@devis-2026-042.pdf \
+    -F folder=0199…
+  # → 201 { "id": "…", "name": "devis-2026-042.pdf", … }
   ```
 ::
 
@@ -57,38 +52,50 @@ Ce que vous pouvez faire
 #features
   :::u-page-feature
   ---
-  icon: i-lucide-square-dashed-mouse-pointer
-  to: /embed/overview
+  icon: i-lucide-folder-tree
+  to: /files/files
   ---
   #title
-  Composeur embarquable
+  Un espace par utilisateur
 
   #description
-  Affichez le composeur dans votre CRM ou votre ERP : vos utilisateurs envoient en leur nom, sans quitter votre application.
+  Dossiers et sous-dossiers, dépôt par glisser-déposer, aperçu dans le navigateur, recherche, quota d'espace.
   :::
 
   :::u-page-feature
   ---
-  icon: i-lucide-shield-check
-  to: /embed/security
+  icon: i-lucide-share-2
+  to: /files/sharing
   ---
   #title
-  Sécurisé par conception
+  Liens de partage
 
   #description
-  Secret côté serveur uniquement, jetons courts à portée restreinte, origines autorisées et jamais de droits administrateur.
+  Un lien public vers un fichier ou un dossier, sans compte : mot de passe, date d'expiration, nombre de téléchargements.
   :::
 
   :::u-page-feature
   ---
-  icon: i-lucide-layout-template
-  to: /administration/templates
+  icon: i-lucide-send
+  to: /administration/storage#notifications-par-email
   ---
   #title
-  Templates visuels versionnés
+  Notifications par email
 
   #description
-  Créez vos emails avec GrapesJS, partagez-les, restaurez une version précédente et importez-les dans le composeur.
+  Le lien part par email aux destinataires, au nom de l'utilisateur, par Rocket Mailer.
+  :::
+
+  :::u-page-feature
+  ---
+  icon: i-lucide-code
+  to: /api/files
+  ---
+  #title
+  API pour vos applications
+
+  #description
+  Vos applications déposent et lisent des fichiers au nom de leurs utilisateurs (impersonation), et créent des liens de partage.
   :::
 
   :::u-page-feature
@@ -97,33 +104,21 @@ Ce que vous pouvez faire
   to: /administration/users-ldap
   ---
   #title
-  Comptes locaux et LDAP
+  Comptes locaux, LDAP et SSO
 
   #description
-  Synchronisation avec votre annuaire, connexion par l'annuaire et rôle administrateur piloté par un groupe LDAP.
+  Synchronisation avec votre annuaire, connexion unique via Rocket Auth, rôle administrateur piloté par un groupe.
   :::
 
   :::u-page-feature
   ---
-  icon: i-lucide-key-round
-  to: /api/authentication
+  icon: i-lucide-lock
+  to: /administration/storage#confidentialité
   ---
   #title
-  API complète
+  Espaces privés
 
   #description
-  Envoyez des emails et gérez les templates via une API REST documentée (OpenAPI), en tant qu'utilisateur ou application.
-  :::
-
-  :::u-page-feature
-  ---
-  icon: i-lucide-history
-  to: /getting-started/introduction#traçabilité
-  ---
-  #title
-  Traçabilité
-
-  #description
-  Chaque objet garde qui l'a créé et modifié, et chaque email l'utilisateur et l'application d'origine.
+  Chacun ne voit que ses fichiers, administrateurs compris. Les contenus sont stockés sous un nom opaque.
   :::
 ::
