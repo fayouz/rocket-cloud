@@ -55,7 +55,7 @@ cd frontend && npm install && npm run dev -- --port 3200   # NUXT_PUBLIC_API_BAS
 - Vers un fichier ou un dossier (sous-dossiers compris), ouverts **sans compte** sur `/s/<jeton>`.
 - Options : mot de passe (haché, envoyé en `POST`, jamais dans une URL), date d'expiration, nombre maximal de téléchargements, message.
 - **Mes partages** : état (actif, expiré, épuisé), nombre de téléchargements, copie du lien, suppression immédiate. Un lien cesse de fonctionner si son propriétaire est désactivé.
-- **Envoi par email** aux destinataires (20 au maximum) par [Rocket Mailer](https://github.com/fayouz/rocket-mailer) : Rocket Cloud y est une application externe qui envoie au nom de l'utilisateur. `ROCKET_MAILER_URL` (API de Rocket Mailer), `ROCKET_MAILER_TOKEN` (jeton `rma_…` de l'application déclarée dans Rocket Mailer, avec impersonation) et `FRONTEND_URL` (base des liens). Vides : pas d'email, les liens se transmettent à la main.
+- **Envoi par email** aux destinataires (20 au maximum) par [Rocket Mailer](https://github.com/fayouz/rocket-mailer) : Rocket Cloud y est une application externe qui envoie au nom de l'utilisateur. `ROCKET_MAILER_URL` (API de Rocket Mailer), `ROCKET_MAILER_TOKEN` (jeton `rma_…` de l'application déclarée dans Rocket Mailer, avec impersonation ; inutile en mode suite, où Rocket Cloud utilise un jeton de Rocket Auth pour l'audience `rocket-mailer`) et `FRONTEND_URL` (base des liens). Vides : pas d'email, les liens se transmettent à la main.
 
 ### API pour les applications
 ```bash

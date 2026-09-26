@@ -6,6 +6,8 @@ parameters:
     # Rocket Mailer (share notifications): URL of its API and application token (rma_…). Empty: no email.
     env(ROCKET_MAILER_URL): ''
     env(ROCKET_MAILER_TOKEN): ''
+    # Suite mode: client ID of Rocket Mailer in Rocket Auth (audience of the tokens of Rocket Cloud).
+    env(ROCKET_MAILER_AUDIENCE): 'rocket-mailer'
     env(UPDATE_REPOSITORY): 'fayouz/rocket-cloud'
 
 services:

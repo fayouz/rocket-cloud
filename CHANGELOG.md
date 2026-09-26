@@ -4,6 +4,11 @@ Toutes les évolutions notables de Rocket Cloud. Le format suit [Keep a Changelo
 
 ## [Non publié]
 
+### Ajouté
+
+- **Suite Rocket, appels à Rocket Mailer sans jeton statique** : en mode suite, les notifications de partage partent avec un jeton d'accès de Rocket Auth (identifiants client, audience `rocket-mailer`, `ROCKET_MAILER_AUDIENCE`), que Rocket Mailer rattache à l'application liée au client `rocket-cloud`. `ROCKET_MAILER_TOKEN` reste utilisé en mode autonome, et en secours si Rocket Mailer refuse le jeton de la suite.
+- **Déconnexion back-channel** : se déconnecter de Rocket Auth, ou y être désactivé ou supprimé, ferme les sessions de l'utilisateur dans Rocket Cloud (`POST /api/auth/oidc/backchannel-logout`, adresse déclarée à Rocket Auth ; `ROCKET_INTERNAL_URL` quand Rocket Auth joint Rocket Cloud par une adresse interne).
+
 ## [0.1.0] - 2026-09-25
 
 Première version de Rocket Cloud, la brique de stockage et de partage de fichiers du Middleware Rocket.

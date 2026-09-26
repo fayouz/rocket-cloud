@@ -39,7 +39,7 @@ security:
         - { path: ^/api/auth/login$, roles: PUBLIC_ACCESS }
         - { path: ^/api/(setup|suite)$, roles: PUBLIC_ACCESS }
         - { path: ^/api/embed/frame-policy$, roles: PUBLIC_ACCESS }
-        - { path: ^/api/auth/(providers|oidc/callback)$, roles: PUBLIC_ACCESS }
+        - { path: ^/api/auth/(providers|oidc/callback|oidc/backchannel-logout)$, roles: PUBLIC_ACCESS }
         # Share links: opened by anyone who has the link.
         - { path: ^/api/public/shares/, roles: PUBLIC_ACCESS }
         - { path: ^/api/docs, roles: PUBLIC_ACCESS }
