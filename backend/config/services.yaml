@@ -1,0 +1,23 @@
+parameters:
+    env(FRONTEND_URL): 'http://localhost:3200'
+    # Storage: quota per user and maximum size of a file (bytes).
+    env(CLOUD_DEFAULT_QUOTA): '10737418240'
+    env(CLOUD_MAX_FILE_SIZE): '536870912'
+    # Rocket Mailer (share notifications): URL of its API and application token (rma_…). Empty: no email.
+    env(ROCKET_MAILER_URL): ''
+    env(ROCKET_MAILER_TOKEN): ''
+    # Suite mode: client ID of Rocket Mailer in Rocket Auth (audience of the tokens of Rocket Cloud).
+    env(ROCKET_MAILER_AUDIENCE): 'rocket-mailer'
+    env(UPDATE_REPOSITORY): 'fayouz/rocket-cloud'
+
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    App\:
+        resource: '../src/'
+
+when@test:
+    services:
+        App\Tests\Support\HttpMock: ~

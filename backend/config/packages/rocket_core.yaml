@@ -1,0 +1,4 @@
+rocket_core:
+    app_name: Rocket Cloud
+    app_id: cloud
+    token_prefix: rca_

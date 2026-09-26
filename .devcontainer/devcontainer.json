@@ -1,0 +1,20 @@
+{
+  "name": "Rocket Cloud (démo)",
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu-24.04",
+  "features": {
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {},
+    "ghcr.io/devcontainers/features/github-cli:1": {}
+  },
+  "hostRequirements": {
+    "cpus": 2,
+    "memory": "8gb"
+  },
+  "forwardPorts": [3200, 3201],
+  "portsAttributes": {
+    "3200": { "label": "Rocket Cloud", "onAutoForward": "notify" },
+    "3201": { "label": "Documentation et changelog", "onAutoForward": "notify" },
+    "8200": { "label": "API", "onAutoForward": "silent" },
+    "5432": { "onAutoForward": "ignore" }
+  },
+  "postStartCommand": "bash demo/codespaces/start.sh"
+}
