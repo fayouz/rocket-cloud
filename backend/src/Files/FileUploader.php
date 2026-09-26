@@ -8,6 +8,7 @@ use Rocket\Core\Entity\User;
 use App\Repository\StoredFileRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
@@ -57,6 +58,29 @@ class FileUploader
 
         $this->storage->store($file, $upload);
         $this->em->persist($file);
+        $this->em->flush();
+
+        return $file;
+    }
+
+    /**
+     * Replaces the content of a file (same id, name, folder and share links), within the quota and the size limit.
+     * The new type is detected from the content.
+     */
+    public function replace(StoredFile $file, File $content): StoredFile
+    {
+        $size = (int) $content->getSize();
+        if ($size > $this->maxFileSize) {
+            throw new HttpException(413, \sprintf('The file exceeds the maximum size (%d bytes).', $this->maxFileSize));
+        }
+        if ($this->files->usage($file->getOwner()) - $file->getSize() + $size > $this->quota) {
+            throw new HttpException(413, 'Not enough space left in your storage quota.');
+        }
+        $mime = MimeTypes::getDefault()->guessMimeType($content->getPathname()) ?? 'application/octet-stream';
+        $sha256 = (string) hash_file('sha256', $content->getPathname());
+
+        $this->storage->store($file, $content);
+        $file->replaceContent($size, $mime, $sha256);
         $this->em->flush();
 
         return $file;

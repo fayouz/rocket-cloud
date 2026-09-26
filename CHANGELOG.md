@@ -6,6 +6,8 @@ Toutes les évolutions notables de Rocket Cloud. Le format suit [Keep a Changelo
 
 ### Ajouté
 
+- **Sélecteur de fichiers intégrable** : `embed.js` (`RocketCloud.mount()` et le web component `<rocket-cloud-picker>`) affiche dans une autre application les dossiers et fichiers de son utilisateur, pour choisir un fichier (filtré par type : `accept`, par exemple `.docx`) ou un dossier (`mode="folder"`). Page `/embed/picker`, jeton d’intégration délivré par l’application, origines autorisées dans **Administration → Applications** ; une session d’intégration ne fait que lire. Utilisé par Rocket Dispatch pour sa bibliothèque de modèles.
+- **Remplacer le contenu d’un fichier** : `PUT /api/files/{id}/content` (corps brut) ou `POST` (multipart `file`) garde le fichier (identifiant, nom, dossier, liens de partage) avec son nouveau contenu, dans le quota et la taille maximale. Les applications enregistrent ainsi la nouvelle version d’un document retouché ailleurs.
 - **Suite Rocket, appels à Rocket Mailer sans jeton statique** : en mode suite, les notifications de partage partent avec un jeton d'accès de Rocket Auth (identifiants client, audience `rocket-mailer`, `ROCKET_MAILER_AUDIENCE`), que Rocket Mailer rattache à l'application liée au client `rocket-cloud`. `ROCKET_MAILER_TOKEN` reste utilisé en mode autonome, et en secours si Rocket Mailer refuse le jeton de la suite.
 - **Déconnexion back-channel** : se déconnecter de Rocket Auth, ou y être désactivé ou supprimé, ferme les sessions de l'utilisateur dans Rocket Cloud (`POST /api/auth/oidc/backchannel-logout`, adresse déclarée à Rocket Auth ; `ROCKET_INTERNAL_URL` quand Rocket Auth joint Rocket Cloud par une adresse interne).
 
