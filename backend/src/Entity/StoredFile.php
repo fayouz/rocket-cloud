@@ -152,6 +152,14 @@ class StoredFile
         return $this->sha256;
     }
 
+    /** New content in place (same file, same links): another version of a document, edited elsewhere. */
+    public function replaceContent(int $size, string $mimeType, string $sha256): void
+    {
+        $this->size = $size;
+        $this->mimeType = $mimeType;
+        $this->sha256 = $sha256;
+    }
+
     public function getStorageKey(): string
     {
         return $this->storageKey;

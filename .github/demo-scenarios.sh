@@ -34,3 +34,15 @@ curl -fsS $FRONT/api/dashboard -H "Authorization: Bearer $TOKEN" \
 DEMO_TOKEN=$(grep -o 'rca_demo_[a-z_]*' compose.demo.yaml | head -1)
 curl -fsS $FRONT/api/me -H "Authorization: Bearer $DEMO_TOKEN" -H 'X-Impersonate-User: admin@example.org' \
   | jq -e '.user.email == "admin@example.org" and (.roles | index("ROLE_ADMIN") | not)'
+# An application stores a document for Alice, then replaces its content (same file)
+printf 'version 1' > v1.txt
+FILE=$(curl -fsS -X POST $FRONT/api/files -H "Authorization: Bearer $DEMO_TOKEN" -H 'X-Impersonate-User: alice@example.org' \
+  -H 'Accept: application/json' -F file=@v1.txt -F name=ci-document.txt | jq -r .id)
+printf 'version 2, longer' > v2.txt
+curl -fsS -X PUT $FRONT/api/files/$FILE/content -H "Authorization: Bearer $DEMO_TOKEN" -H 'X-Impersonate-User: alice@example.org' \
+  -H 'Accept: application/json' --data-binary @v2.txt | jq -e --arg id "$FILE" '.id == $id and .name == "ci-document.txt" and .size == 17'
+test "$(curl -fsS $FRONT/api/files/$FILE/content -H "Authorization: Bearer $ALICE")" = 'version 2, longer'
+# The file picker for applications: its script and its page (framed only by the allowed origins)
+curl -fsS $FRONT/embed.js | grep -q 'rocket-cloud-picker'
+curl -fsS -D picker.headers -o /dev/null "$FRONT/embed/picker?app=00000000-0000-0000-0000-000000000000"
+grep -qi 'frame-ancestors' picker.headers

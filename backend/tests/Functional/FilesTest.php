@@ -126,6 +126,48 @@ final class FilesTest extends WebTestCase
         self::assertSame(['used' => 500, 'quota' => 1000, 'maxFileSize' => 600, 'files' => 1], $usage);
     }
 
+    public function testReplaceTheContentOfAFile(): void
+    {
+        $alice = $this->createUser('alice@example.org');
+        $bob = $this->createUser('bob@example.org');
+        $file = $this->upload($this->jwt($alice), 'devis.txt', 'version 1');
+
+        // Raw body: same file (id, name), new content, size, type and fingerprint.
+        $this->client->request('PUT', '/api/files/'.$file['id'].'/content', server: ['HTTP_AUTHORIZATION' => $this->jwt($alice), 'HTTP_ACCEPT' => 'application/json'], content: '%PDF-1.4 version 2');
+        $this->assertStatus(200);
+        $replaced = json_decode((string) $this->client->getResponse()->getContent(), true);
+        self::assertSame([$file['id'], 'devis.txt', 18, 'application/pdf', hash('sha256', '%PDF-1.4 version 2')], [$replaced['id'], $replaced['name'], $replaced['size'], $replaced['mimeType'], $replaced['sha256']]);
+        $this->client->request('GET', '/api/files/'.$file['id'].'/content', server: ['HTTP_AUTHORIZATION' => $this->jwt($alice)]);
+        self::assertSame('%PDF-1.4 version 2', $this->client->getInternalResponse()->getContent());
+
+        // Private: another user does not see it.
+        $this->client->request('PUT', '/api/files/'.$file['id'].'/content', server: ['HTTP_AUTHORIZATION' => $this->jwt($bob)], content: 'x');
+        $this->assertStatus(404);
+        // Empty content: refused.
+        $this->client->request('PUT', '/api/files/'.$file['id'].'/content', server: ['HTTP_AUTHORIZATION' => $this->jwt($alice), 'HTTP_ACCEPT' => 'application/json'], content: '');
+        $this->assertStatus(422);
+    }
+
+    public function testReplacingStaysWithinTheQuotaAndTheMaximumSize(): void
+    {
+        $alice = $this->createUser('alice@example.org');
+        // .env.test: 600 bytes per file, 1000 per user.
+        $a = $this->upload($this->jwt($alice), 'a.bin', str_repeat('a', 500));
+        $b = $this->upload($this->jwt($alice), 'b.bin', str_repeat('b', 400));
+        $replace = function (array $file, int $size): void {
+            $this->client->request('PUT', '/api/files/'.$file['id'].'/content', server: ['HTTP_AUTHORIZATION' => $this->jwt($this->em()->getRepository(User::class)->findOneBy(['email' => 'alice@example.org'])), 'HTTP_ACCEPT' => 'application/json'], content: str_repeat('x', $size));
+        };
+
+        $replace($a, 601);
+        $this->assertStatus(413);
+        // 900 used: b grows by 150, over the quota; a grows by 90, within it (its own size counts once).
+        $replace($b, 550);
+        $this->assertStatus(413);
+        $replace($a, 590);
+        $this->assertStatus(200);
+        self::assertSame(990, $this->api('GET', '/api/files/usage', authorization: $this->jwt($alice))['used']);
+    }
+
     public function testApplicationsStoreFilesForAUser(): void
     {
         $this->createUser('alice@example.org');
@@ -138,6 +180,13 @@ final class FilesTest extends WebTestCase
         // Without impersonation, an application reaches nothing.
         $this->upload('Bearer '.$token, 'x.txt', 'x');
         $this->assertStatus(403);
+
+        // A new version of its document, multipart, still on behalf of the user.
+        $path = tempnam(sys_get_temp_dir(), 'up');
+        file_put_contents($path, '%PDF-1.4 version 2');
+        $this->client->request('POST', '/api/files/'.$file['id'].'/content', [], ['file' => new UploadedFile($path, 'facture.pdf', test: true)], ['HTTP_AUTHORIZATION' => 'Bearer '.$token, 'HTTP_X_IMPERSONATE_USER' => 'alice@example.org', 'HTTP_ACCEPT' => 'application/json']);
+        $this->assertStatus(200);
+        self::assertSame(\strlen('%PDF-1.4 version 2'), json_decode((string) $this->client->getResponse()->getContent(), true)['size']);
     }
 
     public function testShareLinksWithPasswordLimitsAndNotification(): void
