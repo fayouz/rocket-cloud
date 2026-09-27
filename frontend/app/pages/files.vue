@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { ExplorerItem, ExplorerLocation } from '@rocket/file-explorer/types'
+import type { ExplorerItem, ExplorerLocation } from '#file-explorer'
 import type { StorageUsage } from '~/types/api'
 
 // "Mes fichiers": the reusable explorer (@rocket/file-explorer) on the user's private space, plus the quota and sharing.
