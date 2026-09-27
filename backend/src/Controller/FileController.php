@@ -11,6 +11,7 @@ use App\Repository\StoredFileRepository;
 use Rocket\Core\Security\ActorContext;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -55,6 +56,38 @@ final class FileController extends AbstractController
         }
 
         return self::send($file, $storage, $request->query->getBoolean('download') || !$file->isPreviewable());
+    }
+
+    /**
+     * Replaces the content of a file, keeping its id, name, folder and share links (a document edited by another
+     * application, for instance): raw body with PUT, or multipart "file" with POST. Applications replace on behalf
+     * of the owner (X-Impersonate-User).
+     */
+    #[Route('/api/files/{id}/content', name: 'api_file_replace', requirements: ['id' => Requirement::UUID], methods: ['PUT', 'POST'])]
+    public function replace(StoredFile $file, Request $request, FileUploader $uploader, ActorContext $actor): JsonResponse
+    {
+        if ($file->getOwner() !== $actor->requireUser()) {
+            throw $this->createNotFoundException();
+        }
+        $upload = $request->files->get('file');
+        if ($upload instanceof UploadedFile) {
+            if (!$upload->isValid()) {
+                return $this->json(['detail' => $upload->getErrorMessage()], Response::HTTP_UNPROCESSABLE_ENTITY);
+            }
+            $content = $upload;
+        } else {
+            $path = tempnam(sys_get_temp_dir(), 'replace');
+            $body = $request->getContent(true);
+            $out = fopen($path, 'w');
+            stream_copy_to_stream($body, $out);
+            fclose($out);
+            $content = new File($path);
+        }
+        if (0 === $content->getSize()) {
+            return $this->json(['detail' => 'The new content is empty.'], Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        return $this->json($uploader->replace($file, $content), context: ['groups' => ['file:read', 'tracking']]);
     }
 
     /** Storage used by the current user, quota and upload limit. */

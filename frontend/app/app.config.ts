@@ -21,6 +21,8 @@ export default defineAppConfig({
       { label: 'Mes fichiers', icon: 'i-lucide-folder', to: '/files' },
       { label: 'Mes partages', icon: 'i-lucide-share-2', to: '/shares' },
     ] as { label: string, icon?: string, to?: string, type?: 'label', exact?: boolean, admin?: boolean }[],
+    // The file picker is embedded by applications (/embed/picker, public/embed.js): allowed origins in Administration → Applications.
+    embed: true,
     // Share links are opened by anyone who has the link.
     publicPaths: ['/s/'],
     // Extra entries of the Administration menu.
